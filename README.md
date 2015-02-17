@@ -2,6 +2,8 @@
 
 Boilerplate setup for printing Markdown content to paged media (e.g. PDF).
 
+[![Stories in Ready](https://badge.waffle.io/attentif/md-to-print-kindling.svg?label=ready&title=Ready)](http://waffle.io/attentif/md-to-print-kindling)
+
 **TODO: This is a work in progress.**
 
 
