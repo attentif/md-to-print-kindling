@@ -22,6 +22,18 @@ Two steps from Markdown to paged media:
 2. Process generated HTML & CSS to generate paged media output
 
 
+## Usage
+
+(Prerequisite: Node.js)
+
+Download zip (or clone), then the basic workflow is (from the repo root):
+
+1. edit contents in `src`
+2. run `make` to build once , or `make watch` to watch and auto-rebuild on `src` changes
+
+To cleanup `build`, do `make clean` (leaves untouched the folder itself and possible system files within).
+
+
 ## Licence
 
 MIT

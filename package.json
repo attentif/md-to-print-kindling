@@ -1,0 +1,31 @@
+{
+  "name": "static-site-kindling",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Simple boilerplate setup for Metalsmith-generated static sites based on Handlebars and Stylus",
+  "keywords": [
+    "book",
+    "e-book",
+    "generator",
+    "handlebars",
+    "markdown",
+    "metalsmith",
+    "print",
+    "pdf",
+    "stylus"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/attentif/md-to-print-kindling.git"
+  },
+  "author": "Simon Goumaz <simon@attentif.ch>",
+  "license": "MIT",
+  "main": "build.js",
+  "dependencies": {
+    "handlebars": "^3.0.0",
+    "metalsmith": "^1.3.0",
+    "metalsmith-in-place": "^1.0.1",
+    "metalsmith-markdown": "^0.2.1",
+    "metalsmith-watch": "^0.2.0"
+  }
+}
