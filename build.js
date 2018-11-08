@@ -1,6 +1,7 @@
 var handlebars = require('handlebars'),
     hbmd = require('metalsmith-hbt-md'),
     markdown = require('metalsmith-markdown-remarkable'),
+    markdownClassy = require('remarkable-classy'),
     metalsmith = require('metalsmith')(__dirname),
     watch = process.argv[2] === 'watch' ? require('metalsmith-watch') : null;
 
@@ -15,7 +16,7 @@ metalsmith
       breaks: true,
       typographer: true,
       quotes: '«»‘’'
-    }));
+    }).use(markdownClassy));
 
 if (watch) {
   metalsmith.use(watch());
