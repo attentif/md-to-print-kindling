@@ -2,7 +2,7 @@
 title: Example contents
 ---
 
-# {{title}} [title]
+# {{title}}
 
 Thanks [Lorem Markdownum](http://jaspervdj.be/lorem-markdownum/) for the content.
 
