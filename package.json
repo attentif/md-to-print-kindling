@@ -1,6 +1,6 @@
 {
   "name": "md-to-print-kindling",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Simple boilerplate setup for Metalsmith-generated static sites based on Handlebars and Stylus",
   "keywords": [
@@ -22,10 +22,10 @@
   "license": "MIT",
   "main": "build.js",
   "dependencies": {
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.1.2",
     "metalsmith": "^2.3.0",
     "metalsmith-hbt-md": "^1.0.1",
-    "metalsmith-markdown-remarkable": "^0.1.2",
+    "metalsmith-markdown-remarkable": "^1.0.0",
     "metalsmith-watch": "^1.0.3",
     "remarkable-classy": "0.0.1"
   }
