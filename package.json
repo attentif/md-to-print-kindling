@@ -22,10 +22,10 @@
   "license": "MIT",
   "main": "build.js",
   "dependencies": {
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.4.0",
     "metalsmith": "^2.3.0",
     "metalsmith-hbt-md": "^1.0.1",
-    "metalsmith-markdown-remarkable": "^1.0.0",
+    "metalsmith-markdown-remarkable": "^1.0.1",
     "metalsmith-watch": "^1.0.3",
     "remarkable-classy": "0.0.1"
   }
