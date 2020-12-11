@@ -6,7 +6,7 @@
   "bin": "./bin/mdprint",
   "main": "index.js",
   "scripts": {
-    "test": "node test/*.js"
+    "test": "semistandard && node test/*.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "pdf-extraction": "^1.0.2",
+    "semistandard": "^16.0.0",
     "tape-async": "^2.3.0"
   }
 }

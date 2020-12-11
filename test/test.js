@@ -1,12 +1,12 @@
-const printMarkdown = require('../lib/printMarkdown'),
-      options = require('../lib/options'),
-      test = require('tape-async'),
-      fs = require('fs').promises,
-      path = require('path'),
-      tmp = require('tmp-promise'),
-      pdf = require("pdf-extraction");
+const printMarkdown = require('../lib/printMarkdown');
+const options = require('../lib/options');
+const test = require('tape-async');
+const fs = require('fs').promises;
+const path = require('path');
+const tmp = require('tmp-promise');
+const pdf = require('pdf-extraction');
 
-tmp.setGracefulCleanup()
+tmp.setGracefulCleanup();
 
 test('Should generate a PDF from a Markdown file', async (t) => {
   const sourcePath = path.join(__dirname, '/fixtures/basic.md');
