@@ -1,6 +1,2 @@
-.lock-wscript
-build
-logs
 node_modules
-md-to-print-kindling.iml
 *.log

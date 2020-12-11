@@ -1,32 +1,44 @@
 {
-  "name": "md-to-print-kindling",
-  "version": "0.1.2",
+  "name": "mdprint",
+  "version": "0.2.0",
   "private": true,
-  "description": "Simple boilerplate setup for Metalsmith-generated static sites based on Handlebars and Stylus",
-  "keywords": [
-    "book",
-    "e-book",
-    "generator",
-    "handlebars",
-    "markdown",
-    "metalsmith",
-    "print",
-    "pdf",
-    "stylus"
-  ],
+  "description": "Generates a PDF from one or more Markdown files; handles Nunjucks templating, optional CSS and more.",
+  "bin": "./bin/mdprint",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/*.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/attentif/md-to-print-kindling.git"
   },
+  "keywords": [
+    "book",
+    "cli",
+    "converter",
+    "css",
+    "generator",
+    "markdown",
+    "markdown-it",
+    "nunjucks",
+    "prince",
+    "princexml",
+    "print",
+    "pdf",
+    "renderer",
+    "template"
+  ],
   "author": "Simon Goumaz <simon@attentif.ch>",
   "license": "MIT",
-  "main": "build.js",
   "dependencies": {
-    "handlebars": "^4.4.0",
-    "metalsmith": "^2.3.0",
-    "metalsmith-hbt-md": "^1.0.1",
-    "metalsmith-markdown-remarkable": "^1.0.1",
-    "metalsmith-watch": "^1.0.3",
-    "remarkable-classy": "0.0.1"
+    "markdown-it": "^12.0.3",
+    "nunjucks": "^3.2.2",
+    "prince": "^1.8.3",
+    "tmp-promise": "^3.0.2",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "pdf-extraction": "^1.0.2",
+    "tape-async": "^2.3.0"
   }
 }

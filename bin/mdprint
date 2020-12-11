@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+const yargs = require('yargs/yargs'),
+      options = require('../lib/options'),
+      printMarkdown = require('../lib/printMarkdown'),
+      util = require('util');
+
+const argv = yargs(process.argv.slice(2))
+  .usage('Usage: $0 <Markdown file(s)> [options] --output <PDF file>')
+  .example('$0 doc.md -o doc.pdf', 'Single Markdown file')
+  .example('$0 ch1.md ch2.md ch3.md -o book.pdf', 'Multiple Markdown files (to be concatenated)')
+  .alias('o', 'output')
+  .nargs('o', 1)
+  .describe('o', 'Name or path of the output PDF file')
+  .demandOption(['o'])
+  .help('h')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .argv;
+
+const opts = options.parse();
+
+printMarkdown(argv._, argv.output, opts)
+  .then(() => {
+    console.log('OK');
+  })
+  .catch((err) => {
+    console.error(util.inspect(err));
+  });
