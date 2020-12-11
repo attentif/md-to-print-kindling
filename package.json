@@ -3,10 +3,13 @@
   "version": "0.2.0",
   "private": true,
   "description": "Generates a PDF from one or more Markdown files; handles Nunjucks templating, optional CSS and more.",
-  "bin": "./bin/mdprint",
-  "main": "index.js",
+  "bin": {
+    "mdprint": "./bin/mdprint.js"
+  },
+  "main": "./lib/index.js",
   "scripts": {
-    "test": "semistandard && node test/*.js"
+    "test": "semistandard && nyc node test/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -38,6 +41,8 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
+    "coveralls": "^3.1.0",
+    "nyc": "^15.1.0",
     "pdf-extraction": "^1.0.2",
     "semistandard": "^16.0.0",
     "tape-async": "^2.3.0"

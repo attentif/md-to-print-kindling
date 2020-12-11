@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs/yargs'),
-      options = require('../lib/options'),
-      printMarkdown = require('../lib/printMarkdown'),
-      util = require('util');
+const yargs = require('yargs/yargs');
+const options = require('../lib/options');
+const printMarkdown = require('../lib/printMarkdown');
+const util = require('util');
 
 const argv = yargs(process.argv.slice(2))
   .usage('Usage: $0 <Markdown file(s)> [options] --output <PDF file>')
