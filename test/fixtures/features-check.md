@@ -4,11 +4,26 @@ title: Example contents
 
 # Markdown features check
 
+## Nunjucks template code
+
 Metadata test: {{ testKey }}
 
-Thanks [Lorem Markdownum](http://jaspervdj.be/lorem-markdownum/) for the content.
+## Markdown extensions
 
-Quick features test: ^superscript^, ~subscript~, ^[footnote], ++insertion++, ~~deletion~~, ==highlight==
+### Inline
+
+- ^superscript^ and ~subscript~
+- ^[footnote]
+- ++insertion++, ~~deletion (a.k.a. strikethrough)~~ and ==highlight==
+
+### Block
+
+Table:
+
+| Left  | Center | Right |
+| :---  | :---:  |  ---: |
+| L1    |   C1   |    R1 |
+| L2    |   C2   |    R2 |
 
 
 # Chapter One

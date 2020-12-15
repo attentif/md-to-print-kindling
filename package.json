@@ -34,6 +34,11 @@
   "license": "MIT",
   "dependencies": {
     "markdown-it": "^12.0.3",
+    "markdown-it-footnote": "^3.0.2",
+    "markdown-it-ins": "^3.0.0",
+    "markdown-it-mark": "^3.0.0",
+    "markdown-it-sub": "^1.0.0",
+    "markdown-it-sup": "^1.0.0",
     "nunjucks": "^3.2.2",
     "prince": "^1.8.3",
     "tmp-promise": "^3.0.2",

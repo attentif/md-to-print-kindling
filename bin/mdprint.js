@@ -17,17 +17,25 @@ const argv = yargs(process.argv.slice(2))
     nargs: 1,
     defaultDescription: '<input>.pdf'
   })
-  .option('m', {
+  .option('d', {
     alias: 'metadata',
     describe: 'Key-value pairs to use when rendering template code',
     nargs: 1
+  })
+  .option('s', {
+    alias: 'save-html',
+    describe: 'Save the intermediate HTML file(s) (to <input>.html)',
+    type: 'boolean'
   })
   .help('h')
   .alias('h', 'help')
   .alias('v', 'version')
   .argv;
 
-const opts = options.parse({ metadata: argv.metadata });
+const opts = options.parse({
+  metadata: argv.metadata,
+  saveHTML: argv['save-html']
+});
 
 printMarkdown(argv._, argv.output, opts)
   .then(() => {
@@ -35,6 +43,7 @@ printMarkdown(argv._, argv.output, opts)
     process.exit(0);
   })
   .catch((err) => {
+    console.error(err);
     console.error(`Error: ${err.message}`);
     process.exit(1);
   });

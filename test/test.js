@@ -26,11 +26,11 @@ test('Should generate a PDF from a Markdown file', async (t) => {
 
   const pdfData = await pdf(pdfBuffer);
   t.match(pdfData.text, /Level 2.+Level 3.+Paragraph text.+some code.+Item 1.+Item 2/gs,
-    'Generated PDF contents must match source Markdown contents');
+    'The generated PDF must match the source Markdown');
 });
 
 test('Should name the PDF after the input file if no output name is specified', async (t) => {
-  const expectedPDFName = path.join(__dirname, '/fixtures/basic.pdf');
+  const expectedPDFName = replaceExtension(basicMD, '.pdf');
 
   // make sure no PDF is there beforehand
   if (fsSync.existsSync(expectedPDFName)) {
@@ -55,11 +55,11 @@ test('Should generate a PDF from multiple Markdown files', async (t) => {
     .go();
 
   const pdfBuffer = await fs.readFile(pdfName);
-  t.assert(pdfBuffer.length > 0, 'The generated file must not be empty');
+  t.assert(pdfBuffer.length > 0, 'The generated PDF must not be empty');
 
   const pdfData = await pdf(pdfBuffer);
   t.match(pdfData.text, /Basic Markdown.+Markdown features check/gs,
-    'Generated PDF contents must include contents from all input files');
+    'The generated PDF must include contents from all input files');
 });
 
 test('Should render Nunjucks templating using metadata', async (t) => {
@@ -74,7 +74,47 @@ test('Should render Nunjucks templating using metadata', async (t) => {
   const pdfData = await pdf(await fs.readFile(pdfName));
 
   t.match(pdfData.text, new RegExp(`Metadata test: ${testValue}`, 'g'),
-    'Generated PDF contents must contain the passed metadata value');
+    'The generated PDF must contain the passed metadata value');
+});
+
+test('Should save the intermediate HTML file(s) if asked to', async (t) => {
+  const pdfName = await tmpPDFName();
+
+  await cli()
+    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --save-html --output="${pdfName}"`)
+    .stdout(/OK/)
+    .go();
+
+  await checkHTMLAndCleanup(replaceExtension(basicMD, '.html'), /<h1>Basic Markdown<\/h1>/g);
+  await checkHTMLAndCleanup(replaceExtension(featuresCheckMD, '.html'), /<h1>Markdown features check<\/h1>/g);
+
+  async function checkHTMLAndCleanup (fileName, expectedContentRegex) {
+    const html = (await fs.readFile(fileName)).toString();
+    t.match(html, expectedContentRegex, 'The generated HTML must match source Markdown contents');
+    await fs.unlink(fileName);
+  }
+});
+
+test('Should handle useful Markdown extensions', async (t) => {
+  const pdfName = await tmpPDFName();
+
+  await cli()
+    .run(`${bin} "${featuresCheckMD}" --save-html --output="${pdfName}"`)
+    .stdout(/OK/)
+    .go();
+
+  const htmlName = replaceExtension(featuresCheckMD, '.html');
+  const html = (await fs.readFile(htmlName)).toString();
+
+  t.match(html, /<table>/g, 'Table support');
+  t.match(html, /<sup>superscript/g, 'Superscript support');
+  t.match(html, /<sub>subscript/g, 'Subscript support');
+  t.match(html, /<sup class="footnote-ref">.+<li id="fn1" class="footnote-item"><p>footnote/gs, 'Footnote support');
+  t.match(html, /<ins>insertion/g, 'Insertion support');
+  t.match(html, /<s>deletion/g, 'Strikethrough (deletion) support');
+  t.match(html, /<mark>highlight/g, 'Mark (highlight) support');
+
+  await fs.unlink(htmlName);
 });
 
 test('Should respond with an error if the input file does not exist', async (t) => {
@@ -89,10 +129,6 @@ test('Should respond with an error if the input file does not exist', async (t) 
   t.assert(!fsSync.existsSync(pdfName), 'No PDF should be generated');
 });
 
-async function tmpPDFName () {
-  return await tmp.tmpName({ postfix: '.pdf' });
-}
-
 /**
  * nixt wrapper: cwd() is setup and go() returns a promisified end().
  */
@@ -100,4 +136,12 @@ function cli () {
   const n = nixt();
   n.go = util.promisify(n.end);
   return n.cwd(path.join(__dirname, '/..'));
+}
+
+async function tmpPDFName () {
+  return await tmp.tmpName({ postfix: '.pdf' });
+}
+
+function replaceExtension (fileName, newExt) {
+  return path.join(path.dirname(fileName), path.basename(fileName, path.extname(fileName)) + newExt);
 }
