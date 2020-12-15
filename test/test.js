@@ -9,15 +9,16 @@ const pdf = require('pdf-extraction');
 
 tmp.setGracefulCleanup();
 
+const bin = './bin/mdprint.js';
+const basicMD = path.join(__dirname, '/fixtures/basic.md');
+
 test('Should generate a PDF from a Markdown file', async (t) => {
-  const mdName = path.join(__dirname, '/fixtures/basic.md');
   const pdfName = await tmpPDFName();
 
-  await nixtP()
-    .cwd(path.join(__dirname, '/..'))
-    .run(`./bin/mdprint.js "${mdName}" --output "${pdfName}"`)
+  await cli()
+    .run(`${bin} "${basicMD}" --output "${pdfName}"`)
     .stdout(/OK/)
-    .endP();
+    .go();
 
   const pdfBuffer = await fs.readFile(pdfName);
   t.assert(pdfBuffer.length > 0, 'The generated file must not be empty');
@@ -28,19 +29,17 @@ test('Should generate a PDF from a Markdown file', async (t) => {
 });
 
 test('Should name the PDF after the input file if no output name is specified', async (t) => {
-  const mdName = path.join(__dirname, '/fixtures/basic.md');
   const expectedPDFName = path.join(__dirname, '/fixtures/basic.pdf');
 
-  // clean up beforehand, just in case
+  // make sure no PDF is there beforehand
   if (fsSync.existsSync(expectedPDFName)) {
     await fs.unlink(expectedPDFName);
   }
 
-  await nixtP()
-    .cwd(path.join(__dirname, '/..'))
-    .run(`./bin/mdprint.js "${mdName}"`)
+  await cli()
+    .run(`${bin} "${basicMD}"`)
     .stdout(/OK/)
-    .endP();
+    .go();
 
   t.assert(fsSync.existsSync(expectedPDFName), 'The generated PDF should exist');
   await fs.unlink(expectedPDFName);
@@ -50,11 +49,10 @@ test('Should respond with an error if the input file does not exist', async (t) 
   const mdName = path.join(__dirname, '/no-file-here.md');
   const pdfName = await tmpPDFName();
 
-  await nixtP()
-    .cwd(path.join(__dirname, '/..'))
-    .run(`./bin/mdprint.js "${mdName}" --output "${pdfName}"`)
+  await cli()
+    .run(`${bin} "${mdName}" --output "${pdfName}"`)
     .stderr(/could not find file/i)
-    .endP();
+    .go();
 
   t.assert(!fsSync.existsSync(pdfName), 'No PDF should be generated');
 });
@@ -63,8 +61,11 @@ async function tmpPDFName () {
   return await tmp.tmpName({ postfix: '.pdf' });
 }
 
-function nixtP () {
+/**
+ * nixt wrapper: cwd() is setup and go() returns a promisified end().
+ */
+function cli () {
   const n = nixt();
-  n.endP = util.promisify(n.end);
-  return n;
+  n.go = util.promisify(n.end);
+  return n.cwd(path.join(__dirname, '/..'));
 }
