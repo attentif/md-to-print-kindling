@@ -11,6 +11,7 @@ tmp.setGracefulCleanup();
 
 const bin = './bin/mdprint.js';
 const basicMD = path.join(__dirname, '/fixtures/basic.md');
+const featuresCheckMD = path.join(__dirname, '/fixtures/features-check.md');
 
 test('Should generate a PDF from a Markdown file', async (t) => {
   const pdfName = await tmpPDFName();
@@ -24,8 +25,8 @@ test('Should generate a PDF from a Markdown file', async (t) => {
   t.assert(pdfBuffer.length > 0, 'The generated file must not be empty');
 
   const pdfData = await pdf(pdfBuffer);
-  t.assert(/Level 1.+Level 2.+Paragraph text.+some code.+Item 1.+Item 2/gs
-    .test(pdfData.text), 'Generated PDF contents must match source Markdown contents');
+  t.match(pdfData.text, /Level 2.+Level 3.+Paragraph text.+some code.+Item 1.+Item 2/gs,
+    'Generated PDF contents must match source Markdown contents');
 });
 
 test('Should name the PDF after the input file if no output name is specified', async (t) => {
@@ -43,6 +44,22 @@ test('Should name the PDF after the input file if no output name is specified', 
 
   t.assert(fsSync.existsSync(expectedPDFName), 'The generated PDF should exist');
   await fs.unlink(expectedPDFName);
+});
+
+test('Should generate a PDF from multiple Markdown files', async (t) => {
+  const pdfName = await tmpPDFName();
+
+  await cli()
+    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --output "${pdfName}"`)
+    .stdout(/OK/)
+    .go();
+
+  const pdfBuffer = await fs.readFile(pdfName);
+  t.assert(pdfBuffer.length > 0, 'The generated file must not be empty');
+
+  const pdfData = await pdf(pdfBuffer);
+  t.match(pdfData.text, /Basic Markdown.+Markdown features check/gs,
+    'Generated PDF contents must include contents from all input files');
 });
 
 test('Should respond with an error if the input file does not exist', async (t) => {

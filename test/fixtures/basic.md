@@ -1,6 +1,6 @@
-# Level 1 heading
+# Basic Markdown
 
-## Level 2 heading 
+## Level 2 heading
 
 ### Level 3 heading
 
