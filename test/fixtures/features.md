@@ -2,7 +2,7 @@
 title: Example contents
 ---
 
-# Markdown features check
+# Features
 
 ## Nunjucks template code
 

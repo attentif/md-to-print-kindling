@@ -19,22 +19,28 @@ const argv = yargs(process.argv.slice(2))
   })
   .option('d', {
     alias: 'metadata',
-    describe: 'Key-value pairs to use when rendering template code',
-    nargs: 1
+    describe: 'Key-value pairs to pass template code when rendering Markdown',
+    nargs: 1,
+    default: {}
   })
-  .option('s', {
+  .option('h', {
     alias: 'save-html',
     describe: 'Save the intermediate HTML file(s) (to <input>.html)',
-    type: 'boolean'
+    type: 'boolean',
+    default: false
   })
-  .help('h')
-  .alias('h', 'help')
+  .option('s', {
+    alias: 'style',
+    describe: 'CSS style sheet to use for PDF rendering'
+  })
+  .help('help')
   .alias('v', 'version')
   .argv;
 
 const opts = options.parse({
   metadata: argv.metadata,
-  saveHTML: argv['save-html']
+  saveHTML: argv['save-html'],
+  style: argv.style
 });
 
 printMarkdown(argv._, argv.output, opts)

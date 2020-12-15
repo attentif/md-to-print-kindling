@@ -10,14 +10,12 @@ const pdf = require('pdf-extraction');
 tmp.setGracefulCleanup();
 
 const bin = './bin/mdprint.js';
-const basicMD = path.join(__dirname, '/fixtures/basic.md');
-const featuresCheckMD = path.join(__dirname, '/fixtures/features-check.md');
 
 test('Should generate a PDF from a Markdown file', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${basicMD}" --output="${pdfName}"`)
+    .run(`${bin} "${fixture('basic.md')}" --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
@@ -30,7 +28,7 @@ test('Should generate a PDF from a Markdown file', async (t) => {
 });
 
 test('Should name the PDF after the input file if no output name is specified', async (t) => {
-  const expectedPDFName = replaceExtension(basicMD, '.pdf');
+  const expectedPDFName = replaceExtension(fixture('basic.md'), '.pdf');
 
   // make sure no PDF is there beforehand
   if (fsSync.existsSync(expectedPDFName)) {
@@ -38,7 +36,7 @@ test('Should name the PDF after the input file if no output name is specified', 
   }
 
   await cli()
-    .run(`${bin} "${basicMD}"`)
+    .run(`${bin} "${fixture('basic.md')}"`)
     .stdout(/OK/)
     .go();
 
@@ -50,7 +48,7 @@ test('Should generate a PDF from multiple Markdown files', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --output="${pdfName}"`)
+    .run(`${bin} "${fixture('basic.md')}" "${fixture('features.md')}" --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
@@ -58,7 +56,7 @@ test('Should generate a PDF from multiple Markdown files', async (t) => {
   t.assert(pdfBuffer.length > 0, 'The generated PDF must not be empty');
 
   const pdfData = await pdf(pdfBuffer);
-  t.match(pdfData.text, /Basic Markdown.+Markdown features check/gs,
+  t.match(pdfData.text, /Basic.+Features/gs,
     'The generated PDF must include contents from all input files');
 });
 
@@ -67,12 +65,11 @@ test('Should render Nunjucks templating using metadata', async (t) => {
   const testValue = 'Value from command line';
 
   await cli()
-    .run(`${bin} "${featuresCheckMD}" --metadata.testKey="${testValue}" --output="${pdfName}"`)
+    .run(`${bin} "${fixture('features.md')}" --metadata.testKey="${testValue}" --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
   const pdfData = await pdf(await fs.readFile(pdfName));
-
   t.match(pdfData.text, new RegExp(`Metadata test: ${testValue}`, 'g'),
     'The generated PDF must contain the passed metadata value');
 });
@@ -81,12 +78,12 @@ test('Should save the intermediate HTML file(s) if asked to', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --save-html --output="${pdfName}"`)
+    .run(`${bin} "${fixture('basic.md')}" "${fixture('features.md')}" --save-html --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
-  await checkHTMLAndCleanup(replaceExtension(basicMD, '.html'), /<h1>Basic Markdown<\/h1>/g);
-  await checkHTMLAndCleanup(replaceExtension(featuresCheckMD, '.html'), /<h1>Markdown features check<\/h1>/g);
+  await checkHTMLAndCleanup(replaceExtension(fixture('basic.md'), '.html'), /<h1>Basic<\/h1>/g);
+  await checkHTMLAndCleanup(replaceExtension(fixture('features.md'), '.html'), /<h1>Features<\/h1>/g);
 
   async function checkHTMLAndCleanup (fileName, expectedContentRegex) {
     const html = (await fs.readFile(fileName)).toString();
@@ -99,11 +96,11 @@ test('Should handle useful Markdown extensions', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${featuresCheckMD}" --save-html --output="${pdfName}"`)
+    .run(`${bin} "${fixture('features.md')}" --save-html --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
-  const htmlName = replaceExtension(featuresCheckMD, '.html');
+  const htmlName = replaceExtension(fixture('features.md'), '.html');
   const html = (await fs.readFile(htmlName)).toString();
 
   t.match(html, /<table>/g, 'Table support');
@@ -115,6 +112,18 @@ test('Should handle useful Markdown extensions', async (t) => {
   t.match(html, /<mark>highlight/g, 'Mark (highlight) support');
 
   await fs.unlink(htmlName);
+});
+
+test('Should handle custom CSS file', async (t) => {
+  const pdfName = await tmpPDFName();
+
+  await cli()
+    .run(`${bin} "${fixture('features.md')}" --style="${fixture('style.css')}" --output="${pdfName}"`)
+    .stdout(/OK/)
+    .go();
+
+  const pdfData = await pdf(await fs.readFile(pdfName));
+  t.match(pdfData.text, /Features.+after H1/gs, 'Specified styles must be applied');
 });
 
 test('Should respond with an error if the input file does not exist', async (t) => {
@@ -136,6 +145,13 @@ function cli () {
   const n = nixt();
   n.go = util.promisify(n.end);
   return n.cwd(path.join(__dirname, '/..'));
+}
+
+/**
+ * Returns the full fixture filename.
+ */
+function fixture (name) {
+  return path.join(__dirname, '../test/fixtures', name);
 }
 
 async function tmpPDFName () {

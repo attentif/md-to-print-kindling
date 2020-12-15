@@ -1,4 +1,4 @@
-# Basic Markdown
+# Basic
 
 ## Level 2 heading
 
