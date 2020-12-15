@@ -1,3 +1,5 @@
+.code_style
+.coverage
 .nyc_output
 node_modules
 *.log

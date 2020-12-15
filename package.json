@@ -8,8 +8,7 @@
   },
   "main": "./lib/index.js",
   "scripts": {
-    "test": "semistandard && nyc node test/*.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test": "make .code_style && make test"
   },
   "repository": {
     "type": "git",
