@@ -4,7 +4,7 @@ title: Example contents
 
 # Markdown features check
 
-TODO
+Metadata test: {{ testKey }}
 
 Thanks [Lorem Markdownum](http://jaspervdj.be/lorem-markdownum/) for the content.
 

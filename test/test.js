@@ -17,7 +17,7 @@ test('Should generate a PDF from a Markdown file', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${basicMD}" --output "${pdfName}"`)
+    .run(`${bin} "${basicMD}" --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
@@ -50,7 +50,7 @@ test('Should generate a PDF from multiple Markdown files', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --output "${pdfName}"`)
+    .run(`${bin} "${basicMD}" "${featuresCheckMD}" --output="${pdfName}"`)
     .stdout(/OK/)
     .go();
 
@@ -62,12 +62,27 @@ test('Should generate a PDF from multiple Markdown files', async (t) => {
     'Generated PDF contents must include contents from all input files');
 });
 
+test('Should render Nunjucks templating using metadata', async (t) => {
+  const pdfName = await tmpPDFName();
+  const testValue = 'Value from command line';
+
+  await cli()
+    .run(`${bin} "${featuresCheckMD}" --metadata.testKey="${testValue}" --output="${pdfName}"`)
+    .stdout(/OK/)
+    .go();
+
+  const pdfData = await pdf(await fs.readFile(pdfName));
+
+  t.match(pdfData.text, new RegExp(`Metadata test: ${testValue}`, 'g'),
+    'Generated PDF contents must contain the passed metadata value');
+});
+
 test('Should respond with an error if the input file does not exist', async (t) => {
   const mdName = path.join(__dirname, '/no-file-here.md');
   const pdfName = await tmpPDFName();
 
   await cli()
-    .run(`${bin} "${mdName}" --output "${pdfName}"`)
+    .run(`${bin} "${mdName}" --output="${pdfName}"`)
     .stderr(/could not find file/i)
     .go();
 

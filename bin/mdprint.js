@@ -6,9 +6,10 @@ const printMarkdown = require('../lib/printMarkdown');
 const process = require('process');
 
 const argv = yargs(process.argv.slice(2))
-  .usage('Usage: $0 <Markdown file(s)> [options] --output <PDF file>')
-  .example('$0 doc.md -o doc.pdf', 'Single Markdown file')
-  .example('$0 ch1.md ch2.md ch3.md -o book.pdf', 'Multiple Markdown files (to be concatenated)')
+  .usage('Usage: $0 <Markdown file(s)> [options]')
+  .example('$0 doc.md', 'Single Markdown file; PDF will be generated in "doc.pdf"')
+  .example('$0 ch1.md ch2.md ch3.md --output=book.pdf', 'Multiple Markdown files; output PDF name specified')
+  .example('$0 doc-with-template.md --metadata.key="value"', 'Passing metadata for rendering template code')
   .demandCommand(1, 'Please specify at least one Markdown file')
   .option('o', {
     alias: 'output',
@@ -16,12 +17,17 @@ const argv = yargs(process.argv.slice(2))
     nargs: 1,
     defaultDescription: '<input>.pdf'
   })
+  .option('m', {
+    alias: 'metadata',
+    describe: 'Key-value pairs to use when rendering template code',
+    nargs: 1
+  })
   .help('h')
   .alias('h', 'help')
   .alias('v', 'version')
   .argv;
 
-const opts = options.parse();
+const opts = options.parse({ metadata: argv.metadata });
 
 printMarkdown(argv._, argv.output, opts)
   .then(() => {
