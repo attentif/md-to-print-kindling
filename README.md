@@ -1,38 +1,23 @@
-# Markdown to print kindling
+# mdprint
 
-Boilerplate setup for printing Markdown content to paged media (e.g. PDF).
+[![Build Status](https://travis-ci.com/attentif/mdprint.svg?branch=master)](https://travis-ci.com/attentif/mdprint)
+[![Coverage Status](https://coveralls.io/repos/github/attentif/mdprint/badge.svg?branch=master)](https://coveralls.io/github/attentif/mdprint?branch=master)
 
-[![Stories in Ready](https://badge.waffle.io/attentif/md-to-print-kindling.svg?label=ready&title=Ready)](http://waffle.io/attentif/md-to-print-kindling)
+Generates a PDF from one or more Markdown files; handles Nunjucks templating, optional CSS and more.
 
-**TODO: This is a work in progress.**
+## The reason for yet another Markdown-to-PDF tool
 
-
-## Design notes
-
-Goal: a single, configurable command with sensible defaults to print from one or more Markdown files to paged media.
-
-Constraints:
-
-- Rely on existing tools
-- Make swapping those tools easy – corollary: stick to standards
-
-Two steps from Markdown to paged media:
-
-1. Process base Markdown content to generate standard HTML & CSS
-2. Process generated HTML & CSS to generate paged media output
-
+It's the usual: none of the existing tools I saw had what I wanted. In particular, handling template code (e.g. for injecting data into documents) or nice rendering via [Prince](https://www.princexml.com/).
 
 ## Usage
 
 (Prerequisite: Node.js)
 
-Download zip (or clone), then the basic workflow is (from the repo root):
+`mdprint --help`
 
-1. edit contents in `src`
-2. run `make` to build once , or `make watch` to watch and auto-rebuild on `src` changes
+## Contributing
 
-To cleanup `build`, do `make clean` (leaves untouched the folder itself and possible system files within).
-
+Run the tests with `make test`, check code style ([semistandard](https://github.com/standard/semistandard) with `make .code_style`. See `makefile` and `package.json` for more.
 
 ## Licence
 

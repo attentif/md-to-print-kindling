@@ -1,6 +1,5 @@
-.lock-wscript
-build
-logs
+.code_style
+.coverage
+.nyc_output
 node_modules
-md-to-print-kindling.iml
 *.log
