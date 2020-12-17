@@ -15,6 +15,7 @@ Metadata test: {{ testKey }}
 - ^superscript^ and ~subscript~
 - ^[footnote]
 - ++insertion++, ~~deletion (a.k.a. strikethrough)~~ and ==highlight==
+- inline [text attributes]{.inline-class}
 
 ### Block
 
@@ -25,6 +26,8 @@ Table:
 | L1    |   C1   |    R1 |
 | L2    |   C2   |    R2 |
 
+> Block attributes
+{.block-class}
 
 # Chapter One
 

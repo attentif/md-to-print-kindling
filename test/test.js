@@ -92,7 +92,7 @@ test('Should save the intermediate HTML file(s) if asked to', async (t) => {
   }
 });
 
-test('Should handle useful Markdown extensions', async (t) => {
+test('Should handle Markdown extensions deemed useful', async (t) => {
   const pdfName = await tmpPDFName();
 
   await cli()
@@ -110,6 +110,8 @@ test('Should handle useful Markdown extensions', async (t) => {
   t.match(html, /<ins>insertion/g, 'Insertion support');
   t.match(html, /<s>deletion/g, 'Strikethrough (deletion) support');
   t.match(html, /<mark>highlight/g, 'Mark (highlight) support');
+  t.match(html, /<span class="inline-class">text attributes/g, 'Bracketed spans with attributes support');
+  t.match(html, /<blockquote class="block-class">.*Block attributes/gs, 'Bracketed spans with attributes support');
 
   await fs.unlink(htmlName);
 });
